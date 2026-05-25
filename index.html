@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sumerove.eu | Digitální Wiki encyklopedie o Sumeru</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* BAREVNÁ PALETA A ZÁKLADNÍ PROMĚNNÉ */
+        :root {
+            --bg-page: #f4e9d8;           /* Barva papyru / světlé hlíny */
+            --bg-tablet: #e6d3ba;         /* Barva nepálené cihly */
+            --bg-tablet-dark: #d2b694;    /* Tmavší hlína pro hover efekty */
+            --color-text: #3e2723;        /* Tmavě hnědý, inkoustový text */
+            --color-heading: #2d1810;     /* Skoro černá hnědá pro nadpisy */
+            --color-accent: #8b4513;      /* Terakotová / barva pálené hlíny */
+            --color-ziggurat-1: #d4a373;
+            --color-ziggurat-2: #bc8a5f;
+            --color-ziggurat-3: #a4714b;
+            --color-ziggurat-top: #8b5e34;
+        }
+
+        /* RESET A ZÁKLADNÍ TYPOGRAFIE */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            scroll-behavior: smooth; /* Plynulé scrollování v menu */
+        }
+        body {
+            font-family: 'Lora', serif;
+            background-color: var(--bg-page);
+            color: var(--color-text);
+            line-height: 1.7;
+            font-size: 17px;
+            background-image: 
+                linear-gradient(rgba(244, 233, 216, 0.95), rgba(244, 233, 216, 0.95)),
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 69, 19, 0.03) 10px, rgba(139, 69, 19, 0.03) 20px);
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Cinzel', serif;
+            color: var(--color-heading);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        p {
+            margin-bottom: 1.2rem;
+            text-align: justify;
+        }
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: var(--color-heading);
+            text-decoration: underline;
+        }
+
+        /* HLAVIČKA - ZIKKURAT EFEKT POUZE POMOCÍ CSS */
+        header {
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .ziggurat-base {
+            width: 90%;
+            max-width: 1000px;
+            height: 30px;
+            background-color: var(--color-ziggurat-1);
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+        }
+        .ziggurat-middle {
+            width: 75%;
+            max-width: 850px;
+            height: 30px;
+            background-color: var(--color-ziggurat-2);
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+        }
+        .ziggurat-upper {
+            width: 60%;
+            max-width: 700px;
+            height: 30px;
+            background-color: var(--color-ziggurat-3);
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+        }
+        .ziggurat-top {
+            width: 50%;
+            max-width: 600px;
+            background-color: var(--color-ziggurat-top);
+            color: var(--bg-page);
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            border-bottom: 3px solid rgba(0,0,0,0.2);
+        }
+        .ziggurat-top h1 {
+            color: var(--bg-page);
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .ziggurat-top p {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            margin: 0;
+            color: #e6d3ba;
+        }
+
+        /* NAVIGACE */
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: var(--color-heading);
+            color: white;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border-bottom: 3px solid var(--color-accent);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0.5rem;
+        }
+        .nav-container a {
+            color: var(--bg-page);
+            padding: 0.8rem 1.2rem;
+            font-family: 'Cinzel', serif;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        .nav-container a:hover {
+            background-color: var(--color-accent);
+            text-decoration: none;
+            border-radius: 3px;
+        }
+
+        /* HLAVNÍ OBSAH */
+        main {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+        section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 80px; /* Aby navigace nepřekryla nadpis */
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--color-accent);
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* HLINĚNÉ TABULKY (Články) */
+        article.clay-tablet {
+            background-color: var(--bg-tablet);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 
+                inset 2px 2px 5px rgba(255,255,255,0.4), 
+                inset -3px -3px 8px rgba(0,0,0,0.1),
+                3px 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid rgba(139, 69, 19, 0.2);
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+        article.clay-tablet:hover {
+            transform: translateY(-3px);
+            background-color: var(--bg-tablet-dark);
+        }
+        article.clay-tablet h3 {
+            color: var(--color-accent);
+            font-size: 1.8rem;
+            border-bottom: 1px dashed var(--color-accent);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        article.clay-tablet h4 {
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            color: var(--color-heading);
+        }
+
+        /* ZDROJE A ODKAZY */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .resource-box {
+            background-color: var(--bg-tablet);
+            padding: 1.5rem;
+            border-radius: 5px;
+            border-left: 5px solid var(--color-accent);
+        }
+        .resource-box h4 {
+            margin-top: 0;
+            color: var(--color-accent);
+        }
+        .resource-box ul {
+            list-style-type: square;
+            margin-bottom: 0;
+        }
+        .resource-box a {
+            word-break: break-all;
+        }
+
+        /* PATIČKA (Obrácený zikkurat) */
+        footer {
+            margin-top: 5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .footer-top {
+            width: 100%;
+            background-color: var(--color-heading);
+            color: var(--bg-page);
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        .footer-top p {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            opacity: 0.8;
+            margin: 0;
+        }
+        .footer-ziggurat-1 { width: 70%; height: 20px; background-color: var(--color-ziggurat-3); margin-top: -1px; }
+        .footer-ziggurat-2 { width: 40%; height: 20px; background-color: var(--color-ziggurat-2); }
+        .footer-ziggurat-3 { width: 20%; height: 20px; background-color: var(--color-ziggurat-1); border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;}
+
+        /* COOKIE LIŠTA */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--color-heading);
+            color: var(--bg-page);
+            padding: 1.5rem;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 9999;
+            transform: translateY(100%);
+            transition: transform 0.5s ease-in-out;
+        }
+        .cookie-banner.show {
+            transform: translateY(0);
+        }
+        .cookie-text {
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        .cookie-text p {
+            text-align: center;
+            margin: 0;
+        }
+        .cookie-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .cookie-btn {
+            background-color: var(--color-accent);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.3s ease;
+        }
+        .cookie-btn:hover {
+            background-color: var(--color-ziggurat-1);
+            color: var(--color-heading);
+        }
+        .cookie-btn.reject {
+            background-color: transparent;
+            border: 1px solid var(--color-accent);
+            color: var(--color-accent);
+        }
+        .cookie-btn.reject:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        /* RESPONZIVITA */
+        @media (max-width: 768px) {
+            .ziggurat-top h1 { font-size: 2rem; }
+            .nav-container { flex-direction: column; align-items: center; }
+            .resources-grid { grid-template-columns: 1fr; }
+            .cookie-banner { flex-direction: column; text-align: center; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="ziggurat-base"></div>
+        <div class="ziggurat-middle"></div>
+        <div class="ziggurat-upper"></div>
+        <div class="ziggurat-top">
+            <h1>Sumerove.eu</h1>
+            <p>Digitální Wiki encyklopedie o Sumeru</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-container">
+            <a href="#uvod">Úvod</a>
+            <a href="#spolecnost">Společnost a Politika</a>
+            <a href="#jazyk">Jazyk a Písmo</a>
+            <a href="#nabozenstvi">Náboženství a Mytologie</a>
+            <a href="#mesta">Slavná Města</a>
+            <a href="#zivot">Umění, Věda a Život</a>
+            <a href="#zdroje">Zdroje</a>
+        </div>
+    </nav>
+
+    <main>
+
+        <section id="uvod">
+            <h2 class="section-title">Kolébka civilizace</h2>
+            
+            <article class="clay-tablet">
+                <h3>Sumer: Kolébka, kde se zrodil náš svět</h3>
+                <p>Vítejte na cestě do hlubin historie. Před více než pěti tisíci lety se v úrodné nížině mezi řekami Eufrat a Tigris odehrálo něco nevídaného. Lidé zde poprvé v dějinách opustili život v malých osadách a vybudovali města, která se stala centry správy, obchodu i vědění. Zde se zrodila civilizace.</p>
+                
+                <h4>Objevte svět, který položil základy moderní historie</h4>
+                <p>Sumerové nebyli jen stavitelé prvních měst, jako byl Uruk či Ur. Byli to vizionáři, jejichž myšlenky nás provázejí dodnes, aniž bychom si to uvědomovali:</p>
+                <ul>
+                    <li><strong>Písmo a zákon:</strong> Vynalezli klínové písmo, vůbec první systém zápisu myšlenek a právních norem.</li>
+                    <li><strong>Čas a matematika:</strong> Jejich šedesátková soustava dodnes určuje, jak měříme čas a jak dělíme kruh na stupně.</li>
+                    <li><strong>Božský řád:</strong> Stvořili fascinující panteon mocných božstev, jejichž příběhy o stvoření světa, potopě a hledání smyslu lidského života formovaly myšlení dalších tisíciletí.</li>
+                    <li><strong>Inženýrství a umění:</strong> Od sofistikovaných zavlažovacích systémů, které přeměnily poušť v zahradu, až po královské šperky a chrámy, jejichž monumentálnost nás fascinuje dodnes.</li>
+                </ul>
+                
+                <h4>Co u nás najdete?</h4>
+                <p>Tento portál je průvodcem po sumerské civilizaci. Ať už vás zajímají osudy králů a velekněžek, jako byla Enheduanna, mystéria podsvětí Kur, nebo to, jak fungoval každodenní život v úzkých uličkách mezi hliněnými domy, jste na správném místě.</p>
+                <p>Ponořte se s námi do příběhu národa, který jako první pochopil sílu organizace, vzdělání a umění.</p>
+                <p>Pojďme společně odkrýt tabulky dějin a porozumět odkazu, který Sumerové vryli do hlíny světa.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Obecný přehled o Sumerech</h3>
+                <p>Sumerové představují jednu z nejstarších a nejvýznamnějších civilizací v lidské historii. Objevili se na přelomu 4. a 3. tisíciletí př. n. l. v jižní Mezopotámii, v úrodné nížině mezi řekami Eufrat a Tigris (na území dnešního Iráku). Jejich původ zůstává dodnes záhadou, neboť sumerština je jazykovým izolátem, který nelze přiřadit k žádné známé jazykové rodině.</p>
+                <p>Tento národ vytvořil první komplexní společnost s rozvinutým systémem městských států, jako byly Uruk, Ur, Lagaš či Nippur. Sumerové položili základy mnoha aspektům moderní civilizace. Jsou autory klínového písma, které se vyvinulo z původních piktogramů a umožnilo uchovat nejen správní záznamy, ale i první literární díla, například slavný Epos o Gilgamešovi. Jejich přínos je patrný i v matematice, kde zavedli šedesátkovou soustavu, která dodnes určuje způsob, jakým dělíme čas na minuty a hodiny nebo měříme úhly.</p>
+                <p>Sumerové byli také mistrní stavitelé a inženýři. Vybudovali propracované zavlažovací systémy, které umožnily rozkvět zemědělství, a postavili impozantní chrámové věže zvané zikkuraty. Jejich náboženský systém, hierarchický panteon bohů ovlivňujících přírodní síly, hluboce formoval kulturní a duchovní život všech následných mezopotámských národů. I když jejich politická moc postupně zanikla pod nadvládou Akkadu a dalších impérií, odkaz Sumerů jakožto průkopníků písma, práva, vědy a urbanismu zůstává základním stavebním kamenem vývoje lidské společnosti.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Geografie a přírodní podmínky</h3>
+                <p>Sumerové se usadili v jižní části Mezopotámie, v oblasti dnešního jižního Iráku, vymezené dolními toky řek Eufrat a Tigris. Tato oblast, známá jako aluviální rovina, byla klíčem k jejich civilizačnímu úspěchu.</p>
+                <h4>Přírodní podmínky</h4>
+                <p>Geograficky šlo o nížinu s velmi horkým a suchým podnebím. Půda byla nesmírně úrodná díky naplaveninám, které řeky přinášely, avšak srážky zde byly minimální a nepředvídatelné. Tato výzva nutila Sumerové k vytvoření složitého systému zavlažování (irigace). Vybudovali síť kanálů, přehrad a nádrží, které rozváděly vodu z řek na pole. Tento systém vyžadoval centrální organizaci a spolupráci, což přímo vedlo ke vzniku prvních státních struktur.</p>
+                <h4>Klíčové lokality</h4>
+                <p>Sumer nebyl jednotným státem, ale konfederací nezávislých městských států. Každé z nich se rozkládalo kolem důležitého centra, kterému dominoval chrám (zikkurat):</p>
+                <ul>
+                    <li><strong>Uruk:</strong> Jedno z prvních a největších měst, považované za kolébku písma.</li>
+                    <li><strong>Ur:</strong> Významné obchodní a náboženské centrum u Perského zálivu.</li>
+                    <li><strong>Eridu:</strong> Podle sumerské tradice nejstarší město, místo, kde "království sestoupilo z nebes".</li>
+                    <li><strong>Nippur:</strong> Duchovní centrum Sumeru, sídlo hlavního boha Enlila.</li>
+                </ul>
+                <h4>Strategický význam</h4>
+                <p>Poloha mezi dvěma velkými řekami nabízela Sumerům nejen úrodnou půdu, ale i komunikační tepny pro obchod. Na jihovýchodě měli přístup k Perskému zálivu, což usnadňovalo námořní obchod s oblastmi dnešního Bahrajnu (Dilmun) a údolím řeky Indu. Na severu a západě sousedili s polopouštními oblastmi, odkud přicházely kočovné kmeny, což zemi neustále nutilo k budování městských hradeb a vojenské ostražitosti. Tato geografická izolovanost v úrodné oáze obklopené nehostinnou krajinou utvářela unikátní sumerskou kulturu.</p>
+            </article>
+        </section>
+
+        <section id="spolecnost">
+            <h2 class="section-title">Historie, Společnost a Politika</h2>
+            
+            <article class="clay-tablet">
+                <h3>Klíčové fáze vývoje</h3>
+                <p>Vývoj sumerské civilizace lze rozdělit do několika klíčových fází, které definují vzestup, rozkvět a transformaci jejich společnosti. Zde je přehled tří zásadních období:</p>
+                <h4>1. Urucké období (cca 4000 – 2900 př. n. l.)</h4>
+                <p>Toto období představuje „sumerskou revoluci“ a zrod první skutečné urbanizace.</p>
+                <ul>
+                    <li><strong>Vznik měst:</strong> Uruk se stává prvním velkým městským centrem světa. Společnost se centralizuje kolem monumentálních chrámových komplexů.</li>
+                    <li><strong>Vynález písma:</strong> Kolem roku 3200 př. n. l. se objevuje první protoklínové písmo, původně určené pro účely správy a hospodářského účetnictví.</li>
+                    <li><strong>Technologie:</strong> Rozmach výroby keramiky (běžné nádobí vyráběné na hrnčířském kruhu) a rozvoj metalurgie mědi.</li>
+                </ul>
+                <h4>2. Raně dynastické období (cca 2900 – 2350 př. n. l.)</h4>
+                <p>Čas soupeření mezi nezávislými městskými státy (Uruk, Ur, Lagaš, Kiš, Umma).</p>
+                <ul>
+                    <li><strong>Politická roztříštěnost:</strong> Městské státy spolu neustále bojují o území a přístup k vodním zdrojům. V čele měst stojí panovníci (lugal), kteří si upevňují moc.</li>
+                    <li><strong>Kultura a náboženství:</strong> Zikkuraty dosahují své klasické podoby. Rozvíjí se sumerská literatura (např. eposy o hrdinských králích) a bohaté pohřební rituály, jak dokládají slavné Královské hrobky v Uru.</li>
+                    <li><strong>Konec éry:</strong> Období končí vzestupem Sargona Akkadského, který poprvé sjednotil Mezopotámii pod akkadskou nadvládou.</li>
+                </ul>
+                <h4>3. Období Ur III (Sumerská renesance) (cca 2112 – 2004 př. n. l.)</h4>
+                <p>Po pádu akkadské říše a období nadvlády Gutejců dochází k poslednímu velkému vzestupu čistě sumerské moci.</p>
+                <ul>
+                    <li><strong>Centralizovaný stát:</strong> Dynastie založená králem Ur-Nammuem vytvořila vysoce organizovaný byrokratický stát.</li>
+                    <li><strong>Zákonodárství:</strong> Vzniká Zákoník Ur-Nammua, nejstarší známý psaný zákoník na světě, který předchází slavnějšímu Chammurapiho zákoníku.</li>
+                    <li><strong>Administrativní preciznost:</strong> Z tohoto období máme k dispozici obrovské množství administrativních tabulek, které detailně popisují fungování státní ekonomiky, přerozdělování zásob a zemědělskou produkci.</li>
+                    <li><strong>Zánik:</strong> Éra končí kolem roku 2004 př. n. l. vpádem Elamitů a postupným pronikáním semitských Amoritů, což vedlo k postupnému splynutí Sumerů s novými populacemi a definitivnímu ústupu sumerštiny jako mluveného jazyka.</li>
+                </ul>
+                <p>Poznámka: Po roce 2000 př. n. l. sice Sumerové jako etnikum postupně zanikají, ale jejich kulturní, vědecký a náboženský odkaz byl plně integrován do následujících babylonských a asyrských kultur, čímž se stali základem celé mezopotámské civilizace.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Městské státy</h3>
+                <p>Sumer neexistoval jako jeden centralizovaný stát v moderním slova smyslu, ale jako soubor nezávislých, často soupeřících městských států. Každé z těchto měst bylo politickým, náboženským i ekonomickým centrem, které kontrolovalo své bezprostřední okolí – pole, sady a zavlažovací kanály.</p>
+                <h4>Struktura a fungování</h4>
+                <p>Městský stát byl chápán jako majetek místního božstva. Lidé věřili, že město existuje proto, aby sloužilo svému bohu a zajišťovalo mu blahobyt.</p>
+                <ul>
+                    <li><strong>Chrámové hospodářství:</strong> V raných fázích tvořil chrám (E) centrum všeho dění. Kněží spravovali půdu, sýpky a obchod. Postupem času se však moc přesunula k paláci (E-gal), tedy k sekulárnímu vládci.</li>
+                    <li><strong>Vládce (Lugal a Ensi):</strong> Titul ensi označoval původně správce chrámu nebo místního guvernéra. Lugal (doslova „velký muž“) byl titul pro krále, který měl vojenskou a politickou autoritu. Často se tyto funkce prolínaly – král byl zároveň nejvyšším knězem a ochráncem chrámu.</li>
+                    <li><strong>Urbanismus:</strong> Města byla obehnána masivními hradbami z nepálených cihel, což odráželo neustálou hrozbu konfliktů mezi sousedními městy kvůli půdě a vodním právům. Uprostřed města se tyčil zikkurat, který byl vizuální dominantou i náboženským středobodem.</li>
+                </ul>
+                <h4>Hlavní městské státy</h4>
+                <ul>
+                    <li><strong>Uruk:</strong> "Město králů", známé především legendárním králem Gilgamešem a monumentální chrámovou architekturou. Bylo to jedno z prvních skutečných měst světa s vysokou hustotou zalidnění.</li>
+                    <li><strong>Ur:</strong> Strategicky situované město blízko ústí Eufratu do Perského zálivu, což z něj činilo obchodní metropoli. Proslulo svými královskými hrobkami a bohatstvím.</li>
+                    <li><strong>Lagaš:</strong> Město známé svými častými hraničními spory se sousední Ummou. Z Lagaše pocházejí důležité písemné prameny o raných pokusech o sociální reformy (např. král Urukagina).</li>
+                    <li><strong>Nippur:</strong> Toto město postrádalo politickou dominanci, ale bylo náboženským srdcem Sumeru. Sídlil zde Enlil, hlavní bůh sumerského panteonu. Vládnout v Nippuru znamenalo získat legitimitu k vládnutí celému Sumeru.</li>
+                    <li><strong>Eridu:</strong> Považováno za vůbec nejstarší město, kde podle sumerských mýtů začala civilizace. Bylo zasvěceno bohu moudrosti Enkimu.</li>
+                </ul>
+                <h4>Konflikty a soupeření</h4>
+                <p>Vztahy mezi těmito státy byly dynamické. Často docházelo k aliancím, ale častěji ke krvavým válkám. Hlavní příčinou byla kontrola nad zavlažovacími kanály, protože odklonění toku vody sousednímu městu znamenalo jeho ekonomickou zkázu. Tato neustálá rivalita sice bránila trvalému sjednocení, ale zároveň stimulovala rychlý vývoj technologií, správy a vojenství, které měly těmto státům zajistit převahu nad soupeři.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Politické uspořádání</h3>
+                <p>Politické uspořádání Sumeru prošlo během staletí vývojem od chrámové správy až k centralizované monarchii. Základním konceptem byla teokracie – přesvědčení, že vládce je prostředníkem mezi bohy a lidmi a že město patří konkrétnímu božstvu.</p>
+                <h4>Hlavní pilíře moci</h4>
+                <ul>
+                    <li><strong>Ensi (Správce):</strong> Původně náboženský a administrativní správce chrámu. Ensi měl na starosti hospodářství, údržbu kanálů a dohled nad náboženskými obřady. Byl vnímán jako „nájemce“ půdy, která fakticky patřila městskému bohu.</li>
+                    <li><strong>Lugal (Král):</strong> Doslova „velký muž“. Tento titul se prosadil, když rostla potřeba stálého vojenství. Lugal byl primárně válečný vůdce, který chránil město před vnějšími nepřáteli a rivaly. Časem se funkce ensi a lugal spojily v jedné osobě, která vládla absolutisticky.</li>
+                    <li><strong>Chrámová správa (E):</strong> Chrámy nebyly jen duchovními místy, ale i centry redistribuční ekonomiky. Písmaři zde evidovali sklady obilí, stáda dobytka a pracovní sílu. V raných dobách byla moc kněžstva fakticky politickou mocí.</li>
+                </ul>
+                <h4>Správa státu</h4>
+                <ul>
+                    <li><strong>Byrokracie:</strong> Sumerové vytvořili první sofistikovaný úřednický aparát. Písmaři (písaři) hráli klíčovou roli – spravovali daně, dohlíželi na stavbu kanálů a sepisovali smlouvy. Bez nich by složitý systém závlah a obchodu nefungoval.</li>
+                    <li><strong>Shromáždění starších:</strong> V nejstarších dobách (před vznikem silných dynastií) existovaly rady starších, které měly pravomoc omezovat moc vládce v krizových situacích. S nástupem dědičné královské moci vliv těchto rad postupně upadal.</li>
+                    <li><strong>Zákonnost:</strong> Panovník byl garantem řádu. Panovníci (např. Urukagina v Lagaši nebo později Ur-Nammu v Uru) vydávali reformy a zákoníky, aby omezili korupci, chránili vdovy a sirotky a zajistili spravedlnost, což byla jejich „božská povinnost“.</li>
+                </ul>
+                <h4>Dynamika moci</h4>
+                <p>Politické uspořádání bylo nestabilní kvůli neustálé snaze městských států ovládnout sousedy. Když jeden lugal ovládl více měst, vznikla hegemonie. Vládce takového celku se tituloval jako „král Kiše“ (i když v Kiši přímo nesídlil), což byl symbolický titul pro „krále Sumeru“. Skutečného sjednocení bylo dosaženo až v období Ur III, kdy byl vytvořen komplexní, byrokraticky řízený stát s hierarchií guvernérů dosazených centrální vládou.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Ur-Nammův zákoník</h3>
+                <p>Ur-Nammův zákoník (Zákoník krále Ur-Nammu) je přelomovým dokumentem právní historie. Ačkoliv se v historickém povědomí často cituje slavnější Chammurapiho zákoník, Ur-Nammův zákoník je o zhruba 300 let starší, což z něj činí nejstarší známý psaný zákoník na světě.</p>
+                <h4>Původ a vznik</h4>
+                <ul>
+                    <li><strong>Datace:</strong> Byl sepsán přibližně kolem roku 2100 př. n. l. během období třetí dynastie z Uru (Ur III).</li>
+                    <li><strong>Autorství:</strong> Připisuje se králi Ur-Nammuovi, zakladateli dynastie, i když někteří badatelé spekulují, že autorem mohl být jeho syn Šulgi.</li>
+                    <li><strong>Dochování:</strong> Původní hliněné tabulky se nám dochovaly ve zlomcích (nalezeny v Nippuru, Uru a Sipparu).</li>
+                </ul>
+                <h4>Filosofie práva: Od „oka za oko“ k pokutám</h4>
+                <p>Ur-Nammův zákoník představuje významný posun v právním myšlení. Zatímco pozdější babylonské právo (Chammurapi) je proslulé krutostí typu „oko za oko“ (lex talionis), Ur-Nammův zákoník je překvapivě humanističtější.</p>
+                <ul>
+                    <li><strong>Peněžní tresty:</strong> Většina přestupků a násilných činů se neřešila tělesným trestem, ale peněžní pokutou (odškodným) ve stříbře. Například za zranění nebo ublížení na zdraví musel viník zaplatit stanovenou sumu šekelů.</li>
+                    <li><strong>Sociální ochrana:</strong> Zákoník explicitně zmiňuje snahu panovníka chránit slabší vrstvy společnosti – sirotky před bohatými a vdovy před vlivnými muži. Panovník se v úvodu definuje jako garant spravedlnosti v celé zemi.</li>
+                    <li><strong>Struktura:</strong> Dokument začíná prologem, ve kterém král zdůrazňuje svou legitimitu danou bohy, následují konkrétní právní případy (kazuistické právo: „pokud někdo učiní..., zaplatí...“) a končí epilogem.</li>
+                </ul>
+                <h4>Proč je tak důležitý?</h4>
+                <ul>
+                    <li><strong>Civilizační milník:</strong> Zákoník dokazuje, že Sumerové již v raném období disponovali vyspělým právním vědomím a schopností abstraktního myšlení o spravedlnosti.</li>
+                    <li><strong>Státní správa:</strong> Existence psaného zákoníku v celém státě naznačuje, že král Ur-Nammu se snažil sjednotit zemi nejen vojensky, ale i právně – aby v celém Sumeru platila stejná pravidla.</li>
+                    <li><strong>Vliv:</strong> Ur-Nammův zákoník položil základy pro celou tradici mezopotámského práva, která trvala další dvě tisíciletí.</li>
+                </ul>
+                <p>Zajímavost: Ačkoliv je tento zákoník známý pod moderním názvem „Ur-Nammův“, v sumerštině by se spíše označoval jako di-til-la (konečný rozsudek) nebo jako edikt zajišťující nam-šul-ga (spravedlnost/řád).</p>
+            </article>
+        </section>
+
+        <section id="jazyk">
+            <h2 class="section-title">Jazyk, Písmo a Literatura</h2>
+            
+            <article class="clay-tablet">
+                <h3>Sumerský jazyk</h3>
+                <p>Sumerský jazyk (eme-gi) je z hlediska lingvistiky naprostým unikátem. Je to jazykový izolát, což znamená, že jej nelze genealogicky propojit s žádnou jinou známou jazykovou rodinou (jako jsou např. indoevropské nebo semitské jazyky).</p>
+                <h4>Základní charakteristiky</h4>
+                <ul>
+                    <li><strong>Typologie:</strong> Sumerština je jazyk aglutinační. To znamená, že gramatické významy (jako pád, osoba nebo čas) se vyjadřují připojováním řetězců specifických koncovek (přípon) ke kořenu slova. Je to podobný princip, jaký známe například z turečtiny nebo finštiny.</li>
+                    <li><strong>Slovosled:</strong> Základní slovosled je SOV (podmět – předmět – přísudek). Sloveso stojí vždy na konci věty.</li>
+                    <li><strong>Ergativnost:</strong> Sumerština je jazykem typu ergativ-absolutiv. To znamená, že gramatické označení podmětu se liší podle toho, zda jde o sloveso přechodné (které má předmět), nebo nepřechodné. Pro lingvisty je to velmi fascinující a složitý systém.</li>
+                </ul>
+                <h4>Písmo: Cesta ke klínu</h4>
+                <p>Sumerština nebyla zapsána alfabetou (abecedou), ale klínovým písmem.</p>
+                <ul>
+                    <li><strong>Vývoj:</strong> Začalo to jako piktografický systém (obrázky věcí) pro potřeby účetnictví. Postupem času se znaky zjednodušily do formy otisků rákosového rydla do měkké hlíny – proto ten typický „klínový“ vzhled.</li>
+                    <li><strong>Fonogramy vs. Ideogramy:</strong> Znaky mohly reprezentovat celý pojem (ideogram) nebo jen zvukovou hodnotu (slabičný znak). Toto umožnilo psát nejen seznamy zboží, ale i složité věty, básně a právní texty.</li>
+                </ul>
+                <h4>Odumírání jazyka</h4>
+                <p>Kolem roku 2000 př. n. l. sumerština jako živý mluvený jazyk postupně zanikla. Byla nahrazena akkadštinou (semitským jazykem), ale v Mezopotámii se udržela jako jazyk vědy, náboženství a literatury (podobně jako latina ve středověké Evropě). Písaři se sumerštinu učili ve školách (eduba) ještě celá staletí poté, co ji lidé přestali používat v běžné konverzaci.</p>
+                <p>Díky tomu, že Sumerové psali na hliněné tabulky, které se v troskách měst vypálily a tím konzervovaly, se nám zachovalo obrovské množství textů – od královských nápisů až po školní cvičení a osobní dopisy.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Klínové písmo</h3>
+                <p>Klínové písmo není jazyk, ale způsob zápisu, který se stal nejdůležitějším komunikačním nástrojem starověkého Předního východu na více než tři tisíciletí. Jeho vznik a evoluce jsou úzce spjaty s potřebami sumerské správy a obchodu.</p>
+                <h4>Evoluce: Od obrázků ke klínům</h4>
+                <ul>
+                    <li><strong>Piktogramy (cca 3500 př. n. l.):</strong> Úplně první záznamy byly jednoduché kresby předmětů (např. hlava vola pro „kus dobytka“). Bylo to čistě účetní písmo – kdo, co, kolik.</li>
+                    <li><strong>Abstrakce:</strong> Postupem času se kreslení stávalo nepraktickým. Písaři začali používat rákosové rydlo s trojhranným hrotem. Místo kreslení čar začali do hlíny „vtlačovat“ klínovité otisky. Tím se znaky staly abstraktnějšími a ztratily podobu původních obrázků.</li>
+                    <li><strong>Fonetizace:</strong> Revolučním krokem bylo využití znaků pro zachycení zvuků (slabičné znaky). To umožnilo zapsat abstraktní pojmy, jména a gramatické obraty, čímž se písmo proměnilo z pouhého soupisu zboží v plnohodnotný literární nástroj.</li>
+                </ul>
+                <h4>Materiál a technika</h4>
+                <ul>
+                    <li><strong>Hliněná tabulka:</strong> Základním nosičem byla vlhká hlína. Po zapsání textu se tabulka nechala vyschnout na slunci (pro dočasné záznamy) nebo vypálila v peci (pro archivační účely). Díky vypálení se nám zachovaly statisíce tabulek v téměř dokonalém stavu.</li>
+                    <li><strong>Rydlo:</strong> Šlo o seříznutý rákos (stéblo), který díky svému trojhrannému průřezu vytvářel charakteristický otisk – „klín“.</li>
+                </ul>
+                <h4>Úloha písaře</h4>
+                <p>Písařství bylo v Sumeru vysoce prestižním povoláním. Písaři se vzdělávali v institucích zvaných eduba (doslova „dům tabulek“). Výcvik byl nesmírně náročný, zahrnoval memorování tisíců znaků a ovládání komplexní gramatiky sumerštiny i akkadštiny. Písaři nebyli jen zapisovatelé; byli to správci státu, diplomaté a učenci, kteří udržovali sumerskou kulturu naživu.</p>
+                <h4>Dědictví</h4>
+                <p>Klínové písmo nepřevzali jen následní obyvatelé Mezopotámie (Akkadové, Babyloňané, Asyřané), ale i národy v širším okolí – Chetité v Anatolii, Elamité v Íránu či Peršané. Každý z těchto národů systém upravil pro svůj vlastní jazyk. Klínové písmo bylo tedy skutečným „spojovacím jazykem“ starověku, který umožnil přenos vědění napříč staletími.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Sumerská literatura</h3>
+                <p>Sumerská literatura je nejstarším známým literárním korpusem v dějinách lidstva. Její objevení radikálně změnilo náš pohled na počátky civilizace, neboť ukázalo, že již před 4 000 lety lidé psali hluboké, filozofické a emocionální texty.</p>
+                <h4>Charakter literatury</h4>
+                <p>Sumerská literatura vznikala primárně v prostředí písařských škol (eduba) a dvorské kultury. Její obsah byl úzce spjat s náboženstvím, mýty a oslavou panovníků. Typickými žánry byly:</p>
+                <ul>
+                    <li><strong>Mýty a epika:</strong> Vyprávění o bozích a hrdinských králích.</li>
+                    <li><strong>Hymny:</strong> Ódy na božstva nebo na konkrétní chrámy a panovníky.</li>
+                    <li><strong>Nářky:</strong> Literární žánr oplakávající zkázu měst, která byla často interpretována jako trest od bohů.</li>
+                    <li><strong>Moudroslovná literatura:</strong> Přísloví, bajky a didaktické dialogy, které sloužily k výchově písařů.</li>
+                </ul>
+                <h4>Klíčová díla</h4>
+                <ul>
+                    <li><strong>Epos o Gilgamešovi:</strong> Ačkoliv nejznámější verze je akkadská, její kořeny jsou čistě sumerské. Původní sumerské příběhy (např. Gilgameš a Agga nebo Gilgameš a cedrový les) popisují krále Uruku hledajícího nesmrtelnost a jeho přátelství s Enkiduem.</li>
+                    <li><strong>Mýtus o stvoření a potopě:</strong> Sumerové vytvořili příběh o velké potopě (hrdina se jmenuje Ziusudra), který je přímým předobrazem pozdějšího biblického příběhu o Noemovi.</li>
+                    <li><strong>Inannin sestup do podsvětí:</strong> Fascinující příběh o bohyni lásky a války, který ukazuje sumerské představy o smrti, pomíjivosti a složité psychologii božstev.</li>
+                    <li><strong>Zákoníky a královské nápisy:</strong> I když jde o administrativní texty, často obsahují literární pasáže oslavující spravedlnost panovníka (např. Ur-Nammuův zákoník).</li>
+                </ul>
+                <h4>Význam literatury</h4>
+                <p>Sumerská literatura nebyla jen zábavou; měla edukační a politickou funkci. Učila písaře nejen technice psaní, ale i hodnotám, historii a mytologii, které udržovaly stabilitu společnosti. Díky tomu, že byly tyto texty v období Ur III a později standardizovány a kopírovány, se nám dochovaly jako základní kámen mezopotámské kulturní identity.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Sumerský královský seznam a literární mýty</h3>
+                
+                <h4>Sumerský královský seznam (SKL)</h4>
+                <p>Sumerský královský seznam (Sumerian King List, zkráceně SKL) je jedním z nejdůležitějších a zároveň nejvíce fascinujících dokumentů, které nám zanechala mezopotámská civilizace. Jde o hliněnou tabulku (dochovanou v několika exemplářích), která zaznamenává seznam králů, délku jejich vlád a sídla jejich království od počátku času až po začátek 2. tisíciletí př. n. l.</p>
+                <p>Seznam je unikátní tím, jak kombinuje mytologii s historickými fakty. Jeho hlavním poselstvím je legitimita: králův úřad je božského původu a „království sestoupilo z nebes“ a putovalo mezi různými městy.</p>
+                <ul>
+                    <li><strong>Předpotopní éra:</strong> Seznam začíná králi, kteří vládli před „velkou potopou“. Jejich délky vlád jsou neuvěřitelné – udávají se v desítkách tisíc let (např. vládce Eridu Alulim měl vládnout 28 800 let). Pro Sumery to nebyla lež, ale vyjádření posvátnosti a spojení s bohy.</li>
+                    <li><strong>Postpotopní éra:</strong> Po potopě se království „vrátilo z nebes“ do město Kiš. Od tohoto bodu se délky vlád začínají postupně zkracovat a přibližovat realitě.</li>
+                    <li><strong>Historická fakta:</strong> V pozdějších částech seznam obsahuje jména králů, jejichž existence je potvrzena archeologickými nálezy (např. Enmebaragesi z Kiše nebo panovníci dynastie Ur).</li>
+                </ul>
+                <p>Seznam nebyl zamýšlen jako kronika v našem slova smyslu (není to přesný historický záznam), ale jako politický manifest. Panovník, který ovládal město uvedené v seznamu jako sídlo království, měl právo považovat se za „krále všech Sumerů“. Pro moderní vědu je seznam problematický, protože mnoho králů, kteří vládli současně v různých městech, je v seznamu řazeno za sebou. Sumerský královský seznam je tedy spíše ideologickým pohledem na historii, který nám však skvěle vypovídá o tom, jak Sumerové sami sebe vnímali.</p>
+
+                <h4>Inannin sestup do podsvětí</h4>
+                <p>Inannin sestup do podsvětí (Inana-di-kur-ra) je jedním z nejpůsobivějších a psychologicky nejpropracovanějších sumerských mýtů. Tento příběh není jen popisem cesty do zásvětí, ale hlubokou metaforou o proměně, ztrátě moci, smrti a znovuzrození.</p>
+                <p>Inanna, mocná sumerská bohyně lásky, plodnosti a války, se rozhodne sestoupit do Kur (podsvětí), kterému vládne její sestra, temná bohyně smrti Ereškigal.</p>
+                <ul>
+                    <li><strong>Příprava:</strong> Inanna se vybaví sedmi božskými odznaky své moci.</li>
+                    <li><strong>Sestup a sedm bran:</strong> U každé ze sedmi bran podsvětí musí Inanna odevzdat jeden kus svého oděvu nebo šperku.</li>
+                    <li><strong>Smrt a vzkříšení:</strong> Když Inanna konečně vstoupí před trůn Ereškigal, je nahá, bezmocná a je na místě usmrcena. Její tělo, visící na háku, se stává mrtvolou. Díky božskému zásahu boha Enkiho je však Inanna pomocí „potravy života“ a „vody života“ křísena.</li>
+                    <li><strong>Cena za návrat:</strong> Podsvětí však vyžaduje náhradu. Inanna nakonec vybere svého manžela, pastýře Dumuziho, který je odveden do podsvětí, aby tam strávil polovinu roku (vysvětlení střídání ročních období).</li>
+                </ul>
+
+                <h4>Enmerkar a pán Aratty</h4>
+                <p>Enmerkar a pán Aratty (Enmerkar-Enmerkara) je jedním z nejzajímavějších sumerských epických textů, který se odehrává v mýtickém období raného Uruku. Tento epos není jen příběhem o rivalitě dvou mocných vládců, ale zároveň „etiologickým mýtem“, který vysvětluje, jak a proč vzniklo písmo a jak se vyvíjela diplomacie.</p>
+                <p>Epos popisuje souboj mezi dvěma králi: Enmerkarem, vládcem Uruku, a nejmenovaným pánem Aratty. Klíčovým prvkem příběhu je zdlouhavá „diplomatická pošta“ mezi oběma králi, kterou zajišťuje vyčerpaný posel.</p>
+                <p><strong>Vynález písma:</strong> V příběhu se objevuje moment, kdy se posel stane tak unaveným, že si nedokáže zapamatovat Enmerkarovo stále delší a složitější poselství. Enmerkar proto vezme kus hlíny a poselství do ní vryje. Text uvádí, že tímto okamžikem vzniklo písmo. Je to jeden z nejstarších literárních odkazů na vznik psaného záznamu.</p>
+            </article>
+        </section>
+
+        <section id="nabozenstvi">
+            <h2 class="section-title">Náboženství a Mytologie</h2>
+
+            <article class="clay-tablet">
+                <h3>Sumerský panteon a Kosmologie</h3>
+                <p>Sumerský panteon byl komplexním systémem božstev, která zosobňovala síly přírody, řád vesmíru i základní aspekty lidské existence. Sumerové věřili, že bohové (dingir) vytvořili svět a řídí osudy lidí, kteří jsou zde proto, aby bohům sloužili a udržovali jejich chrámy.</p>
+                
+                <h4>Kosmologie a Vznik světa</h4>
+                <p>Sumerská kosmologie představuje fascinující pokus o vysvětlení řádu vesmíru, jeho vzniku a místa člověka v něm. Pro Sumery nebyl vesmír výsledkem slepé náhody, ale produktem božské vůle a neustálého procesu udržování rovnováhy.</p>
+                <ul>
+                    <li><strong>An (Nebesa):</strong> Nejvyšší sféra, sídlo boha nebes Anua. Byla chápána jako „velká klenba“, která se klene nad zemí.</li>
+                    <li><strong>Ki (Země):</strong> Pevná základna. Sumerové si zemi představovali jako plochý disk obklopený oceánem slané vody.</li>
+                    <li><strong>Kur (Podsvětí):</strong> Říše mrtvých, ležící pod zemí. Nebylo to místo trestu, ale ponurá, šedivá a nezvratná „země bez návratu“, kde mrtví v podobě stínů (gidim) žili v prachu a tmě.</li>
+                    <li><strong>Abzu (Podzemní vody):</strong> Sféra boha Enkiho. Nacházela se pod zemí a byla zdrojem sladké vody, která vyvěrala na povrch v pramenech a řekách.</li>
+                </ul>
+                <p>Člověk byl podle sumerské kosmologie stvořen bohy jako „pracovní síla“. Bohové se totiž unavili neustálým obděláváním země a údržbou kanálů. Lidstvo tedy vzniklo jako nástroj, který měl za bohy odvádět fyzickou práci.</p>
+
+                <h4>Hlavní božstva: "Velká trojka" a Inanna</h4>
+                <p>Panteon byl strukturován podobně jako sumerská společnost. V čele stála rada velkých bohů:</p>
+                <ul>
+                    <li><strong>Enlil:</strong> Enlil byl jednou z nejdůležitějších a nejmocnějších postav sumerského panteonu. Jeho jméno doslova znamená „Pán větru“ (en = pán, lil = vítr/vzduch). Byl to bůh atmosféry, bouřek a vzduchu, ale v sumerské teologii zastával mnohem širší roli – byl faktickým vládcem panteonu a garantem pozemského řádu. Byl to on, kdo rozhodoval o osudech lidí i bohů a „propůjčoval“ královskou hodnost. V mýtech o potopě je to právě on, kdo se rozzlobí na hlučné lidstvo a sešle zkázu.</li>
+                    <li><strong>Enki:</strong> Enki (v akkadštině známý jako Ea) je jednou z nejoblíbenějších a nejdůležitějších postav sumerského panteonu. Zatímco Enlil představoval přísný řád a moc, Enki byl bohem moudrosti, sladkých vod, magie, řemesel a tvořivosti. Na rozdíl od mnoha jiných bohů byl Enki k lidem laskavý a často je obdarovával znalostmi nebo zachraňoval (např. krále Ziusudru před potopou). Voda vyvěrající z ramen je jeho častým symbolem.</li>
+                    <li><strong>Inanna:</strong> Inanna (v akkadštině Ištar) je bezpochyby nejsložitější, nejvíce fascinující a nejmocnější ženskou postavou sumerského panteonu. Zosobňovala radikální dualitu. Byla bohyní lásky, vášně, erotiky a plodnosti, ale zároveň bohyní války, krveprolití a chaosu. Byla dcerou boha měsíce Nanny a jako „královna nebes“ byla uctívána pro svou zářivou moc. Reprezentovala ambici a dokázala často přechytračit i bohy jako Enlil či Enki.</li>
+                </ul>
+
+                <h4>Kur - Říše mrtvých</h4>
+                <p>Kur je v sumerské mytologii říše mrtvých, temné a nehostinné podsvětí, kam odchází duše každého člověka bez ohledu na to, jak vedl svůj život. Leží hluboko pod zemí, za „řekou bez návratu“ a vládne zde bohyně Ereškigal s manželem Nergalem. Zesnulí zde žijí jako stíny, nemají co jíst kromě prachu, což vedlo obyvatele k obrovské úctě a lásce k životu na zemi.</p>
+
+                <h4>Sumerský kult a náboženská praxe</h4>
+                <p>Sumerský kult byl postaven na jednom základním pilíři: člověk byl stvořen jako služebník bohů. Náboženský život nebyl o osobní víře v moderním smyslu, ale o udržování vesmírné rovnováhy prostřednictvím precizně prováděných rituálů.</p>
+                <ul>
+                    <li><strong>Chrám jako dům božstva:</strong> Chrám (sumersky É) nebyl místem pro shromažďování věřících, ale fyzickým příbytkem boha na zemi. O sochu se starali kněží: ráno a večer ji „krmili“, oblékali ji do drahých látek, myli ji a „bavili“ hudbou.</li>
+                    <li><strong>Zikkurat:</strong> Nebyl prostor pro veřejné bohoslužby, ale umělá „posvátná hora“ spojující svět lidí a nebeskou sféru.</li>
+                    <li><strong>Role kněžstva:</strong> Bylo vysoce organizované, od En/Entu (nejvyšší kněží) až po Bari (věštce), Kalû (zpěváky nářků) a Asû (léčitele).</li>
+                </ul>
+            </article>
+        </section>
+
+        <section id="mesta">
+            <h2 class="section-title">Slavná Města</h2>
+
+            <article class="clay-tablet">
+                <h3>Uruk</h3>
+                <p>Uruk (v Bibli zmiňovaný jako Erech, dnes Warka v Iráku) je právem považován za první skutečné velkoměsto v dějinách lidstva. Právě zde, v jižní Mezopotámii, se na přelomu 4. a 3. tisíciletí př. n. l. odehrál civilizační zlom, který zásadně ovlivnil vývoj lidstva.</p>
+                <ul>
+                    <li><strong>Vznik státu:</strong> Uruk byl prvním místem, kde se populace soustředila v takové míře (odhaduje se 25 000 až 50 000 obyvatel), že vyžadovala centralizovanou správu.</li>
+                    <li><strong>Zrození písma:</strong> Právě v Uruku kolem roku 3200 př. n. l. vznikly první hliněné tabulky s protoklínovým písmem.</li>
+                    <li><strong>Urbanismus:</strong> Město bylo obehnáno monumentálními hradbami, které měly v obvodu téměř 10 km. Městu dominovaly dva hlavní chrámové komplexy: E-ana (zasvěcený bohyni Inanně) a Anův zikkurat.</li>
+                </ul>
+                <p>Uruk není v historické paměti spojen jen s archeologií, ale i s postavou krále Gilgameše. Uruk vděčil za svůj rozkvět systému závlahových kanálů a ukázal světu, že život ve velkém, organizovaném společenství přináší technologický pokrok, literaturu, právo i společenskou hierarchii.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Ur</h3>
+                <p>Ur (sumersky Urim) představuje jeden z vrcholů sumerské civilizace. Zatímco Uruk byl „městem počátků“, Ur se v dějinách zapsal jako centrum bohatství, obchodu a monumentálního umění, zejména v období tzv. „sumerské renesance“ (3. dynastie z Uru, cca 2112–2004 př. n. l.).</p>
+                <p>Ur se nacházel na břehu Eufratu, blízko Perského zálivu. Do města proudily lodě s drahými kovy, kameny a dřevem z Bahrajnu (Dilmun) a údolí Indu. Díky dálkovému obchodu se stal neuvěřitelně bohatým.</p>
+                <p>Jedním z nejznámějších objevů jsou <strong>Královské hrobky (Royal Tombs)</strong>, které ukrývaly úžasné zlaté předměty, šperky (slavná Urská lyra) a ozdobné zbraně, ale i ostatky desítek služebníků, rituálně usmrcených pro doprovod panovníka do podsvětí.</p>
+                <p>V období Ur III se město stalo administrativním srdcem říše. Sláva Uru skončila kolem roku 2004 př. n. l., kdy bylo město dobyto Elamity a sumerský král Ibbi-Sin byl odvlečen do zajetí. Tento pád byl oplakán v nejslavnějším sumerském nářku – Nářku nad zkázou města Uru.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Eridu</h3>
+                <p>Eridu (Eridug) zaujímá v sumerské civilizaci zcela unikátní postavení. Podle sumerské tradice jde o nejstarší město na světě, místo, kde „království poprvé sestoupilo z nebes“ a kde začala samotná civilizace.</p>
+                <p>Eridu bylo zasvěceno bohu Enkimu, pánu moudrosti, sladkých vod a magie. Sumerové věřili, že Enki zde vybudoval své sídlo Abzu. Eridu tedy nebylo jen sídlem lidí, ale bylo vnímáno jako bod, kde se božské vědění střetává s lidským světem.</p>
+                <p>Archeologické výzkumy potvrdily, že Eridu patří k nejstarším osídlením. Bylo vnímáno jako „univerzita“ starověkého Sumeru, kam chodili kněží a učenci hledat odpovědi na otázky týkající se řádu světa. Zůstávalo „svatým městem“, symbolem stability a moudrosti.</p>
+            </article>
+        </section>
+
+        <section id="zivot">
+            <h2 class="section-title">Umění, Věda a Běžný život</h2>
+
+            <article class="clay-tablet">
+                <h3>Věda: Matematika a Architektura</h3>
+                <p>Sumerská matematika, založená na šedesátkové soustavě (sexagesimální soustavě), patří k nejtrvalejším odkazům této civilizace. Zatímco my dnes běžně používáme desítkovou soustavu (založenou na počtu prstů na rukou), Sumerové (a následně Babyloňané) vytvořili systém, který je z hlediska dělitelnosti a práce se zlomky extrémně efektivní.</p>
+                <p>Volba čísla 60 nebyla náhodná. Číslo 60 je tzv. vysoce složené číslo, což znamená, že je dělitelné mnoha menšími čísly (1, 2, 3, 4, 5, 6, 10, 12, 15, 20 a 30). Zápis probíhal pozičně pomocí kombinace desítkové a šedesátkové soustavy (svislý klín s hodnotou 1 a rohový klín s hodnotou 10). Dědictví žije dodnes v měření času (60 minut) nebo geometrii (360 stupňů kruhu).</p>
+                
+                <h4>Sumerská architektura</h4>
+                <p>Sumerská architektura byla přímou odpovědí na nedostatek surovin a specifické přírodní podmínky jižní Mezopotámie. Protože v oblasti chyběl kámen a kvalitní dřevo, Sumerové se stali mistry v práci s hlínou, která se stala základním stavebním materiálem jejich civilizace.</p>
+                <ul>
+                    <li><strong>Základní materiál:</strong> Nepálené cihly sušené na slunci a vypalované cihly (spojené bitumenem - asfaltem) pro namáhané části.</li>
+                    <li><strong>Architektonické prvky:</strong> Zikkuraty (stupňovité věže), pilíře a výklenky dodávající stěnám stínohru a zpevnění, mozaiky z barevných hliněných hřebů.</li>
+                    <li><strong>Urský zikkurat:</strong> Urský zikkurat (celým názvem Zikkurat boha Nanny v Uru) je bezpochyby jednou z nejlépe dochovaných a nejvíce ikonických památek sumerské architektury. Stavbu inicioval král Ur-Nammu kolem roku 2100 př. n. l. Jádro tvořila masa sušených cihel, obložená vrstvou pálených cihel s bitumenem. Má tři monumentální schodiště sbíhající se v bráně, vytvářející dojem „schodiště do nebes“.</li>
+                </ul>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Sumerské umění a Urská standarta</h3>
+                <p>Sumerské umění nebylo tvořeno pro potěchu oka nebo „umění pro umění“, jak jej chápeme dnes. Bylo hluboce zakořeněno v náboženském kultu, politické legitimitě a oslavě řádu. Umělecká díla měla za úkol zhmotnit přítomnost bohů nebo stvrdit moc panovníků.</p>
+                <ul>
+                    <li><strong>Sochařství:</strong> Votivní sošky modlících se lidí se široce otevřenýma očima.</li>
+                    <li><strong>Glyptika:</strong> Pečetní válečky do hlíny jako osobní podpis nebo právní ochrana.</li>
+                    <li><strong>Kovotepectví a šperkařství:</strong> Skvělá práce se zlatem a lazuritem.</li>
+                </ul>
+                <p>Urská standarta (někdy také „Standard z Uru“) je jedním z nejznámějších a nejdůležitějších artefaktů nalezených v Královských hrobkách v Uru. Přestože ji Woolley nazval „standartou“, pravděpodobně mohlo jít o ozvučnou skříňku hudebního nástroje.</p>
+                <p>Je vykládaná lazuritem, červeným vápencem a perletí. Je rozdělena na "Válečnou stranu" (zobrazující armádu a válečné vozy) a "Mírovou stranu" (zobrazující královskou hostinu a zástup s dary). Král je vždy zobrazen největší (hieratická perspektiva). Standarta nám dodnes slouží jako otevřená kniha do sumerského myšlení o státní ideologii a uspořádání světa.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Každodenní život a Zábava</h3>
+                <p>Každodenní život v sumerských městech byl striktně organizován, silně ovlivněn klimatem, náboženstvím a sociální hierarchií. I když se život prostého rolníka dramaticky lišil od života městského úředníka, určité prvky byly pro společnost společné.</p>
+                <ul>
+                    <li><strong>Strava:</strong> Základem byl ječný chléb, kaše a pivo (bezpečnější než voda). Strava byla doplněna luštěninami, datlemi a rybami. Maso bylo spíše luxusem svátků.</li>
+                    <li><strong>Oblečení:</strong> Převažovala vlna. Zpočátku suknice (kaunakes), později propracovanější oděvy. Muži i ženy používali líčidla (černé linky) a oleje.</li>
+                    <li><strong>Bydlení:</strong> Patrové domy z nepálených cihel orientované do vnitřního dvora pro chládek a soukromí, často bez oken kvůli vedru. Střechy byly ploché a využívané ke spánku.</li>
+                    <li><strong>Školy (Eduba):</strong> Školy byly výsadou elit. Výuka založená na memorování tisíců znaků a přísné disciplíně i tělesných trestech (rákoskou). Cílem bylo mistrovství v administraci.</li>
+                </ul>
+                
+                <h4>Královská hra z Uru</h4>
+                <p>Královská hra z Uru (známá také jako „Hra dvaceti čtverců“) je jednou z nejstarších a nejúspěšnějších deskových her v dějinách lidstva. Datuje se přibližně do období kolem roku 2600 př. n. l.</p>
+                <p>Hrací deska se skládá z 20 čtverců a hráči měli k dispozici sedm žetonů a hrací kostky ve formě pyramidek. Cílem je dostat své kameny přes celou desku do „cíle“, přičemž hráči se mohou vzájemně vyhazovat. Hra byla extrémně populární napříč Mezopotámií a dokonce nesla věštecký význam předpovídající přízeň bohů.</p>
+            </article>
+
+            <article class="clay-tablet">
+                <h3>Historické osobnosti</h3>
+                <p>Kromě bohů a mytických postav se v sumerských dějinách objevuje řada skutečných historických osobností. Díky královským seznamům, zakládacím nápisům a administrativním tabulkám známe jména vládců, kněží i geniálních stavitelů.</p>
+                <ul>
+                    <li><strong>Ur-Nammu (vládl cca 2112–2095 př. n. l.):</strong> Zakladatel 3. dynastie z Uru. Je známý především jako autor nejstaršího známého zákoníku a jako velký stavitel zikkuratu v Uru.</li>
+                    <li><strong>Šulgi:</strong> Syn Ur-Nammua. Vládl 47 let a pod jeho vládou dosáhla byrokracie vrcholu. Sám uměl psát a skládat hymny.</li>
+                    <li><strong>Enheduanna (23. stol. př. n. l.):</strong> Dcera akkadského krále Sargona, která působila jako velekněžka v Uru. Je to první známý autor v dějinách lidstva, píšící úchvatné hymny na bohyni Inannu.</li>
+                    <li><strong>Gilgameš:</strong> Pátý král první dynastie z Uru. Ačkoliv znám především jako hrdina epopeje, šlo o skutečného panovníka, který nechal v Uruku vybudovat mohutné hradby.</li>
+                    <li><strong>Lugalzagezi:</strong> Poslední významný čistě sumerský král. Sjednotil města, ale podlehl akkadskému Sargonovi.</li>
+                </ul>
+            </article>
+        </section>
+
+        <section id="zdroje">
+            <h2 class="section-title">Zdroje a Odkazy</h2>
+            <div class="resources-grid">
+                <div class="resource-box">
+                    <h4>Webové stránky:</h4>
+                    <ul>
+                        <li><a href="https://cs.wikipedia.org/wiki/Sumer" target="_blank">Wikipedia (CZ) - Sumer</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Sumer" target="_blank">Wikipedia (EN) - Sumer</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/Sumerian_religion" target="_blank">Wikipedia (EN) - Sumerian religion</a></li>
+                        <li><a href="https://etcsl.orinst.ox.ac.uk/" target="_blank">ETCSL - Sumerská literární databáze Oxford</a></li>
+                        <li><a href="https://royalur.net/" target="_blank">Royal Game of Ur - Pravidla a hra</a></li>
+                    </ul>
+                </div>
+                <div class="resource-box">
+                    <h4>Videa (YouTube):</h4>
+                    <ul>
+                        <li><a href="https://youtu.be/q50XH07wYBg" target="_blank">https://youtu.be/q50XH07wYBg</a></li>
+                        <li><a href="https://youtu.be/QDJa2sLNYZs" target="_blank">https://youtu.be/QDJa2sLNYZs</a></li>
+                        <li><a href="https://youtu.be/szFjxmY7jQA" target="_blank">https://youtu.be/szFjxmY7jQA</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-top">
+            <p>Sumerove.eu &copy; 2026 - Odkaz, který byl vryt do hlíny světa.</p>
+        </div>
+        <div class="footer-ziggurat-1"></div>
+        <div class="footer-ziggurat-2"></div>
+        <div class="footer-ziggurat-3"></div>
+    </footer>
+
+    <div id="cookie-banner" class="cookie-banner">
+        <div class="cookie-text">
+            <p><strong>Vaše soukromí v zikkuratu dat</strong></p>
+            <p>Tento web používá soubory cookies k zajištění správného fungování a anonymní analytice dle předpisů EU a ČR. Kliknutím na „Přijmout vše“ udělujete souhlas k použití všech cookies. Kliknutím na „Odmítnout nepovinné“ budou uložena pouze technická cookies nezbytná pro běh webu.</p>
+        </div>
+        <div class="cookie-buttons">
+            <button id="btn-accept" class="cookie-btn">Přijmout vše</button>
+            <button id="btn-reject" class="cookie-btn reject">Odmítnout nepovinné</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const cookieBanner = document.getElementById('cookie-banner');
+            const btnAccept = document.getElementById('btn-accept');
+            const btnReject = document.getElementById('btn-reject');
+            
+            // Kontrola Local Storage, zda uživatel již nezvolil preferenci
+            if (!localStorage.getItem('sumerove_cookies_consent')) {
+                // Malé zpoždění pro plynulý nájezd lišty (animace zespodu)
+                setTimeout(() => {
+                    cookieBanner.classList.add('show');
+                }, 1000);
+            }
+
+            // Obsluha tlačítka Přijmout vše
+            btnAccept.addEventListener('click', function() {
+                localStorage.setItem('sumerove_cookies_consent', 'accepted');
+                cookieBanner.classList.remove('show');
+            });
+
+            // Obsluha tlačítka Odmítnout
+            btnReject.addEventListener('click', function() {
+                localStorage.setItem('sumerove_cookies_consent', 'rejected');
+                cookieBanner.classList.remove('show');
+            });
+        });
+    </script>
+</body>
+</html>
